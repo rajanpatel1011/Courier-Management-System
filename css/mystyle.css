@@ -1,0 +1,76 @@
+/* CSS Document */
+
+.blackbox {
+		
+		border: 1px solid #EBEBEB;
+		padding: 0px;
+}
+
+body{
+font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:12px;
+
+background-color:#0a2f5b;
+
+
+
+
+}
+.lowerstyle{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+
+}
+.lowerstyle a{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration:none;
+
+}
+.lowerstyle a:hover{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration:underline;
+
+}
+
+
+.gentxt {
+	FONT-SIZE: 11px; TEXT-TRANSFORM: none; COLOR: #333333; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial; TEXT-DECORATION: none
+}
+
+
+
+.newtext {
+font-family: sans-serif, arial, helvetica;
+font-size:12px;
+color:#000000;
+}	
+
+
+.redtext {
+font-family: sans-serif, arial, helvetica;
+font-size:12px;
+color:#FF0000;
+}	
+
+input.text {
+	width: 200px;
+	border: 1px groove #6c7d8e;
+	padding: 1px 1px 1px 3px;
+}
+
+
+.paratext {
+FONT-FAMILY: Arial, Helvetica, sans-serif;
+color:#242424;
+FONT-SIZE: 11px;
+LINE-HEIGHT: 16px;
+}
+
+.Partext1 {
+FONT-SIZE: 12px; LINE-HEIGHT: 17px; FONT-FAMILY: Arial, Helvetica, sans-serif
+}

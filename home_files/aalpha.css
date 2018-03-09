@@ -1,0 +1,49 @@
+/* CSS Document */
+
+body{
+
+margin:0px;
+background-color:#0a2f5b;
+
+
+
+}
+.lowerstyle{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+
+}
+.lowerstyle a{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration:none;
+
+}
+a:link {
+	text-decoration: none;
+	color: #000000;
+}
+a:visited {
+	color: #990000;
+	text-decoration: none;
+}
+a:hover {
+	color: #006600;
+}
+
+
+
+.lowerstyle a:hover{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration:underline;
+
+}.aalpha {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 17px;
+	color: #000000;
+}
