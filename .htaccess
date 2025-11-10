@@ -1,0 +1,89 @@
+# Apache Configuration for Courier Management System
+# Enhanced Security Settings
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Courier-Management-System/
+
+    # Force HTTPS (uncomment when using SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Prevent access to sensitive files
+    RewriteRule ^config\.php$ - [F,L]
+    RewriteRule ^database\.php$ - [F,L]
+    RewriteRule ^library\.php$ - [F,L]
+</IfModule>
+
+# Disable Directory Browsing
+Options -Indexes
+
+# Prevent access to hidden files (.git, .htaccess, etc.)
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect configuration and backup files
+<FilesMatch "\.(bak|config|sql|log|ini|sh)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Enable Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
+</IfModule>
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Prevent Clickjacking
+    Header always set X-Frame-Options "DENY"
+
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Prevent MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Remove PHP version info
+    Header unset X-Powered-By
+</IfModule>
+
+# PHP Security Settings
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log /path/to/your/logs/php_errors.log
+    php_flag expose_php Off
+    php_value session.cookie_httponly 1
+    php_value session.use_only_cookies 1
+</IfModule>
+
+# Prevent execution of PHP in upload directories
+<Directory "images">
+    php_flag engine off
+</Directory>
+
+# Custom Error Pages (create these files if needed)
+# ErrorDocument 404 /Courier-Management-System/404.php
+# ErrorDocument 403 /Courier-Management-System/403.php
+# ErrorDocument 500 /Courier-Management-System/500.php
