@@ -4,11 +4,10 @@ require_once('database.php');
 require_once('library.php');
 isUser();
 
-$sql = "SELECT cid, cons_no, ship_name, rev_name, pick_date, pick_time, status
+$sql = "SELECT cid, cons_no, ship_name, rev_name, pick_date, pick_time, status, book_date
 		FROM tbl_courier
-		WHERE status != 'Delivered' 
-		GROUP BY book_date
-		ORDER BY cid DESC";
+		WHERE status != 'Delivered'
+		ORDER BY book_date DESC, cid DESC";
 $result = dbQuery($sql);		
 
 ?>
