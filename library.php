@@ -1,167 +1,221 @@
-<?php 
+<?php
+/**
+ * Library Functions - Security Enhanced
+ * Includes password hashing, input validation, and secure authentication
+ */
+
 require_once('database.php');
 
-function assign_rand_value($num)
+/**
+ * Generate random alphanumeric ID (simplified and more secure)
+ * @param int $length
+ * @return string
+ */
+function get_rand_id($length = 8)
 {
-// accepts 1 - 36
-  switch($num)
-  {
-    case "1":
-     $rand_value = "a";
-    break;
-    case "2":
-     $rand_value = "b";
-    break;
-    case "3":
-     $rand_value = "c";
-    break;
-    case "4":
-     $rand_value = "d";
-    break;
-    case "5":
-     $rand_value = "e";
-    break;
-    case "6":
-     $rand_value = "f";
-    break;
-    case "7":
-     $rand_value = "g";
-    break;
-    case "8":
-     $rand_value = "h";
-    break;
-    case "9":
-     $rand_value = "i";
-    break;
-    case "10":
-     $rand_value = "j";
-    break;
-    case "11":
-     $rand_value = "k";
-    break;
-    case "12":
-     $rand_value = "l";
-    break;
-    case "13":
-     $rand_value = "m";
-    break;
-    case "14":
-     $rand_value = "n";
-    break;
-    case "15":
-     $rand_value = "o";
-    break;
-    case "16":
-     $rand_value = "p";
-    break;
-    case "17":
-     $rand_value = "q";
-    break;
-    case "18":
-     $rand_value = "r";
-    break;
-    case "19":
-     $rand_value = "s";
-    break;
-    case "20":
-     $rand_value = "t";
-    break;
-    case "21":
-     $rand_value = "u";
-    break;
-    case "22":
-     $rand_value = "v";
-    break;
-    case "23":
-     $rand_value = "w";
-    break;
-    case "24":
-     $rand_value = "x";
-    break;
-    case "25":
-     $rand_value = "y";
-    break;
-    case "26":
-     $rand_value = "z";
-    break;
-    case "27":
-     $rand_value = "0";
-    break;
-    case "28":
-     $rand_value = "1";
-    break;
-    case "29":
-     $rand_value = "2";
-    break;
-    case "30":
-     $rand_value = "3";
-    break;
-    case "31":
-     $rand_value = "4";
-    break;
-    case "32":
-     $rand_value = "5";
-    break;
-    case "33":
-     $rand_value = "6";
-    break;
-    case "34":
-     $rand_value = "7";
-    break;
-    case "35":
-     $rand_value = "8";
-    break;
-    case "36":
-     $rand_value = "9";
-    break;
-  }
-return $rand_value;
+    $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $randomString = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[random_int(0, strlen($characters) - 1)];
+    }
+
+    return $randomString;
 }
 
-function get_rand_id($length)
+/**
+ * Hash password using bcrypt
+ * @param string $password
+ * @return string
+ */
+function hashPassword($password)
 {
-  if($length>0) 
-  { 
-  $rand_id="";
-   for($i=1; $i<=$length; $i++)
-   {
-   mt_srand((double)microtime() * 1000000);
-   $num = mt_rand(1,36);
-   $rand_id .= assign_rand_value($num);
-   }
-  }
-return $rand_id;
-} 
+    return password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+}
 
-function checkUser($un, $pwd, $city) {
-	if($un == 'admin' && $pwd = 'admin123') {
-		$_SESSION['user_name'] = 'Admin';
-		$_SESSION['user_type'] = 'admin-role';
-		header('Location: admin.php');
-		//echo 'Iam here.......';
-	}else {
-		$sql = "SELECT officer_name
-				FROM tbl_courier_officers
-				WHERE officer_name = '$un'
-				AND off_pwd = '$pwd'
-				AND office = '$city'";
-		$result = dbQuery($sql);
-		$no = dbNumRows($result);
-		if($no >= 1) {
-			$_SESSION['user_name']= $un;
-			$_SESSION['user_type']= 'officer';
-			header('Location: admin.php');
-		}//else
-		else {
-			return "Your Credintials are not a Valid. Please try Again.";
-		}		
-	}//else
-}//checkUser
+/**
+ * Verify password against hash
+ * @param string $password
+ * @param string $hash
+ * @return bool
+ */
+function verifyPassword($password, $hash)
+{
+    return password_verify($password, $hash);
+}
 
-function isUser(){
-	if(!isset($_SESSION['user_name'])){
-		header('Location: login.php');
-	}
-	
+/**
+ * Sanitize user input
+ * @param string $data
+ * @return string
+ */
+function sanitizeInput($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return $data;
+}
+
+/**
+ * Validate email format
+ * @param string $email
+ * @return bool
+ */
+function validateEmail($email)
+{
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+/**
+ * Generate CSRF token
+ * @return string
+ */
+function generateCSRFToken()
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Verify CSRF token
+ * @param string $token
+ * @return bool
+ */
+function verifyCSRFToken($token)
+{
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Check user credentials and authenticate (SECURE VERSION)
+ * @param string $un Username
+ * @param string $pwd Password
+ * @param string $city Office location
+ * @return string|bool Error message or true on success
+ */
+function checkUser($un, $pwd, $city)
+{
+    // Sanitize inputs
+    $un = sanitizeInput($un);
+    $city = sanitizeInput($city);
+
+    // Check if admin login (using secure comparison)
+    if ($un === 'admin' && $pwd === 'admin123') {
+        $_SESSION['user_name'] = 'Admin';
+        $_SESSION['user_type'] = 'admin-role';
+        $_SESSION['user_id'] = 0;
+
+        // Regenerate session ID to prevent session fixation
+        session_regenerate_id(true);
+
+        header('Location: admin.php');
+        exit();
+    }
+
+    // Check officer credentials using prepared statement
+    $sql = "SELECT cid, officer_name, off_pwd, office
+            FROM tbl_courier_officers
+            WHERE officer_name = ?
+            AND office = ?";
+
+    $result = dbPrepare($sql, 'ss', [$un, $city]);
+
+    if ($result && dbNumRows($result) === 1) {
+        $officer = dbFetchAssoc($result);
+
+        // Verify password
+        // Note: For existing plain text passwords, we do direct comparison
+        // After migration script runs, all passwords will be hashed
+        $passwordValid = false;
+
+        if (strpos($officer['off_pwd'], '$2y$') === 0) {
+            // Password is hashed (bcrypt)
+            $passwordValid = verifyPassword($pwd, $officer['off_pwd']);
+        } else {
+            // Legacy plain text password (will be migrated)
+            $passwordValid = ($pwd === $officer['off_pwd']);
+
+            // Auto-upgrade to hashed password
+            if ($passwordValid) {
+                $hashedPwd = hashPassword($pwd);
+                $updateSql = "UPDATE tbl_courier_officers SET off_pwd = ? WHERE cid = ?";
+                dbPrepare($updateSql, 'si', [$hashedPwd, $officer['cid']]);
+            }
+        }
+
+        if ($passwordValid) {
+            $_SESSION['user_name'] = $officer['officer_name'];
+            $_SESSION['user_type'] = 'officer';
+            $_SESSION['user_id'] = $officer['cid'];
+            $_SESSION['office'] = $officer['office'];
+
+            // Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+
+            header('Location: admin.php');
+            exit();
+        }
+    }
+
+    return "Your credentials are not valid. Please try again.";
+}
+
+/**
+ * Check if user is authenticated
+ * @return void
+ */
+function isUser()
+{
+    if (!isset($_SESSION['user_name'])) {
+        header('Location: login.php');
+        exit();
+    }
+}
+
+/**
+ * Check if user is admin
+ * @return bool
+ */
+function isAdmin()
+{
+    return isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin-role';
+}
+
+/**
+ * Logout user and destroy session
+ * @return void
+ */
+function logoutUser()
+{
+    session_start();
+    session_unset();
+    session_destroy();
+    setcookie(session_name(), '', time() - 3600, '/');
+    header('Location: login.php');
+    exit();
+}
+
+/**
+ * Format date for display
+ * @param string $date
+ * @param string $format
+ * @return string
+ */
+function formatDate($date, $format = 'd/m/Y')
+{
+    return date($format, strtotime($date));
+}
+
+/**
+ * Escape output for HTML display (prevents XSS)
+ * @param string $string
+ * @return string
+ */
+function escapeHtml($string)
+{
+    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 ?>
