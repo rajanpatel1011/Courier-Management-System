@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Courier Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+        }
+        .sidebar {
+            background: #343a40;
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .main-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar p-3">
+                <h4 class="mb-4">Courier Management</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/couriers">
+                            <i class="fas fa-box me-2"></i>Manage Couriers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/couriers/add">
+                            <i class="fas fa-plus me-2"></i>Add Courier
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/offices">
+                            <i class="fas fa-building me-2"></i>Manage Offices
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/offices/add">
+                            <i class="fas fa-plus me-2"></i>Add Office
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/officers">
+                            <i class="fas fa-users me-2"></i>Manage Officers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/officers/add">
+                            <i class="fas fa-user-plus me-2"></i>Add Officer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/change-password">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Admin Dashboard</h2>
+                    <div>
+                        <span class="badge bg-primary">Welcome, <span th:text="${userName}">Admin</span></span>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="dashboard-card text-center">
+                            <i class="fas fa-box fa-2x text-primary mb-3"></i>
+                            <h5>Add Courier</h5>
+                            <a href="/couriers/add" class="btn btn-primary btn-sm">Add New</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card text-center">
+                            <i class="fas fa-building fa-2x text-success mb-3"></i>
+                            <h5>Add Office</h5>
+                            <a href="/offices/add" class="btn btn-success btn-sm">Add New</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card text-center">
+                            <i class="fas fa-users fa-2x text-warning mb-3"></i>
+                            <h5>Add Officer</h5>
+                            <a href="/officers/add" class="btn btn-warning btn-sm">Add New</a>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card text-center">
+                            <i class="fas fa-search fa-2x text-info mb-3"></i>
+                            <h5>Search Courier</h5>
+                            <a href="/couriers/search" class="btn btn-info btn-sm">Search</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity / Summary -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5 class="mb-3">Quick Links</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="/couriers" class="text-decoration-none">View All Couriers</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/couriers/delivered" class="text-decoration-none">Delivered Couriers</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/offices" class="text-decoration-none">View All Offices</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/officers" class="text-decoration-none">View All Officers</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5 class="mb-3">Reports</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <a href="/couriers/status/In%20Transit" class="text-decoration-none">In Transit Couriers</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/couriers/status/Delivered" class="text-decoration-none">Delivery Report</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/report" class="text-decoration-none">Date-wise Report</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="/report" class="text-decoration-none">Generate Report</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
