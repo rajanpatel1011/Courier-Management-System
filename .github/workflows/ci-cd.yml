@@ -50,7 +50,7 @@ jobs:
         SPRING_DATASOURCE_PASSWORD: root
 
     - name: Generate test report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v3
       if: success() || failure()
       with:
         name: JUnit Tests
