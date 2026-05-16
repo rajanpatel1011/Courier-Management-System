@@ -4,7 +4,7 @@ Courier Management System gives all information regarding the every Courier in t
 
 ## Technology Stack
 
-- **Backend**: Java 17, Spring Boot 3.x
+- **Backend**: Java 21, Spring Boot 3.x
 - **Database**: MySQL 8.x with Flyway migrations
 - **Frontend**: Thymeleaf templates with Bootstrap 5
 - **Build Tool**: Maven
@@ -14,7 +14,7 @@ Courier Management System gives all information regarding the every Courier in t
 ## Development Setup
 
 ### Prerequisites
-- Java 17 or higher
+- Java 21
 - Maven 3.6+
 - MySQL 8.0+
 - Git
