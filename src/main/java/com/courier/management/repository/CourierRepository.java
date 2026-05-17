@@ -15,6 +15,8 @@ public interface CourierRepository extends JpaRepository<Courier, Long> {
     // Find courier by consignment number
     Optional<Courier> findByConsignmentNo(String consignmentNo);
 
+    Optional<Courier> findByConsignmentNoIgnoreCase(String consignmentNo);
+
     // Find couriers by status
     List<Courier> findByStatus(String status);
 

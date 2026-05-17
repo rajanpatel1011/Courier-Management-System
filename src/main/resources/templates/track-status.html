@@ -9,13 +9,17 @@
 <body>
 <div class="container py-5">
     <h1>Track Courier Status</h1>
-    <form th:action="@{/couriers/track}" method="get">
+    <p class="text-muted">Enter your consignment number, or scan the QR code on your package label.</p>
+    <form th:action="@{/couriers/track}" method="get" class="mb-4">
         <div class="mb-3">
             <label for="consignmentNo" class="form-label">Enter Consignment Number</label>
             <input type="text" class="form-control" id="consignmentNo" name="consignmentNo" required>
         </div>
         <button type="submit" class="btn btn-primary">Track Status</button>
     </form>
+    <div class="alert alert-info small">
+        <strong>Have a QR code?</strong> Scan it with your phone camera — it opens live tracking automatically.
+    </div>
 </div>
 </body>
 </html>

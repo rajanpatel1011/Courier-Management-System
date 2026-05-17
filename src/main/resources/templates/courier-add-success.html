@@ -12,8 +12,19 @@
         <span th:text="${successMessage}"></span>
     </div>
     <h1>Courier Added Successfully</h1>
-    <a href="/couriers" class="btn btn-primary">View Couriers</a>
-    <a href="/couriers/add" class="btn btn-secondary">Add Another</a>
+
+    <div th:if="${consignmentNo}" class="row mt-4">
+        <div class="col-md-6">
+            <div th:replace="~{fragments/qr-label :: qr-label(${consignmentNo})}"></div>
+            <p class="small text-muted mt-2">Print this QR on the label or share the link with the customer.</p>
+        </div>
+        </div>
+
+    <div class="mt-4">
+        <a href="/couriers" class="btn btn-primary">View Couriers</a>
+        <a href="/couriers/add" class="btn btn-secondary">Add Another</a>
+        <a th:if="${consignmentNo}" th:href="@{/track/q/{no}(no=${consignmentNo})}" class="btn btn-outline-info" target="_blank">Preview Live Track</a>
+    </div>
 </div>
 </body>
 </html>
