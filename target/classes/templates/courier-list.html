@@ -36,6 +36,10 @@
             <td>
                 <a th:href="@{/couriers/{id}(id=${courier.id})}" class="btn btn-sm btn-info">View</a>
                 <a th:href="@{/couriers/{id}/edit(id=${courier.id})}" class="btn btn-sm btn-secondary">Edit</a>
+                <a th:href="@{/tracking/update/{id}(id=${courier.id})}" class="btn btn-sm btn-warning">Status</a>
+                <form th:action="@{/couriers/{id}/deliver(id=${courier.id})}" method="post" style="display:inline-block;">
+                    <button type="submit" class="btn btn-sm btn-success">Deliver</button>
+                </form>
                 <form th:action="@{/couriers/{id}/delete(id=${courier.id})}" method="post" style="display:inline-block;">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                 </form>

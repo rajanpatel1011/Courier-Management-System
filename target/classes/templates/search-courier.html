@@ -45,6 +45,7 @@
             <td th:text="${courier.status}"></td>
             <td>
                 <a th:href="@{/couriers/{id}(id=${courier.id})}" class="btn btn-sm btn-info">View</a>
+                <a th:href="@{/couriers/{id}/edit(id=${courier.id})}" class="btn btn-sm btn-secondary">Edit</a>
             </td>
         </tr>
         <tr th:if="${couriers.empty}">
