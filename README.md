@@ -5,7 +5,7 @@ Courier Management System gives all information regarding the every Courier in t
 ## Technology Stack
 
 - **Backend**: Java 21, Spring Boot 3.x
-- **Database**: MySQL 8.x with Flyway migrations
+- **Database**: MySQL 8.x with JPA/Hibernate
 - **Frontend**: Thymeleaf templates with Bootstrap 5
 - **Build Tool**: Maven
 - **Testing**: JUnit 5, Mockito
@@ -98,9 +98,8 @@ src/
 │   │   ├── service/        # Business logic
 │   │   └── config/         # Configuration classes
 │   └── resources/
-│       ├── templates/      # Thymeleaf templates
-│       ├── static/         # CSS, JS, images
-│       ├── db/migration/   # Flyway migrations
+│       ├── templates/      # Thymeleaf UI
+│       ├── data.sql        # Seed data
 │       └── application.properties
 └── test/                   # Unit and integration tests
 ```
@@ -129,7 +128,7 @@ src/
 
 ## Database Schema
 
-The application uses Flyway for database migrations. Schema includes:
+Hibernate manages the schema from JPA entities (`ddl-auto=update`). Tables include:
 
 - `tbl_courier`: Courier information
 - `tbl_courier_officers`: Staff details
@@ -152,12 +151,12 @@ mvn verify
 
 ### Docker
 ```bash
-# Build image
-docker build -t courier-management .
-
-# Run container
-docker run -p 8080:8080 courier-management
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+mvn clean package -DskipTests
+docker compose up --build -d
 ```
+
+App: http://localhost:8080 · MySQL: `localhost:3306` (user `root`, password `root`, database `courier_db`)
 
 ### Production Deployment
 The CI/CD pipeline handles automated deployment to staging and production environments.
