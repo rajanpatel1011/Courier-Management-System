@@ -42,6 +42,15 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="mt-4">
+        <a th:href="@{/couriers/{id}/edit(id=${courier.id})}" class="btn btn-primary">Edit Shipment</a>
+        <a th:href="@{/tracking/update/{id}(id=${courier.id})}" class="btn btn-warning">Update Status</a>
+        <form th:action="@{/couriers/{id}/deliver(id=${courier.id})}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-success">Mark Delivered</button>
+        </form>
+        <a href="/couriers" class="btn btn-secondary">Back to List</a>
+    </div>
 </div>
 </body>
 </html>

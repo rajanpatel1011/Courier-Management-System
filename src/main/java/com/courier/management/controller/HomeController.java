@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -51,10 +53,22 @@ public class HomeController {
         return "success";
     }
 
-    // Search edit page (tracking form)
+    // Search by consignment number to edit shipment (admin)
     @GetMapping("/search-edit")
     public String searchEdit() {
         return "search-edit";
+    }
+
+    @PostMapping("/search-edit")
+    public String searchEditSubmit(@RequestParam String consignmentNo,
+                                   RedirectAttributes redirectAttributes) {
+        return courierService.getCourierByConsignmentNo(consignmentNo.trim())
+            .map(courier -> "redirect:/couriers/" + courier.getId() + "/edit")
+            .orElseGet(() -> {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                    "Consignment number not found. Please try again.");
+                return "redirect:/search-edit";
+            });
     }
 
     // Track status page

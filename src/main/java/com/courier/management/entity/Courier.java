@@ -107,8 +107,8 @@ public class Courier {
     private String status;
 
     @Size(max = 250, message = "Comments must not exceed 250 characters")
-    @Column(name = "comments", length = 250)
-    private String comments;
+    @Column(name = "comments", nullable = false, length = 250)
+    private String comments = "";
 
     @NotNull(message = "Booking date is required")
     @Column(name = "book_date", nullable = false)
