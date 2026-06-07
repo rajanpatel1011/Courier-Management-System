@@ -49,6 +49,7 @@ public class CourierController {
             Courier savedCourier = courierService.createCourier(courier);
             redirectAttributes.addFlashAttribute("successMessage",
                 "Courier added successfully with Consignment No: " + savedCourier.getConsignmentNo());
+            redirectAttributes.addFlashAttribute("consignmentNo", savedCourier.getConsignmentNo());
             return "redirect:/couriers/add-success";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error adding courier: " + e.getMessage());
