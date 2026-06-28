@@ -19,7 +19,9 @@
                 <p class="card-text">Status: <strong th:text="${courier.status}"></strong></p>
                 <p class="card-text">Shipper: <strong th:text="${courier.shipperName}"></strong></p>
                 <p class="card-text">Receiver: <strong th:text="${courier.receiverName}"></strong></p>
+                <a th:href="@{/track/q/{no}(no=${courier.consignmentNo})}" class="btn btn-success">Live QR Tracking</a>
                 <a th:href="@{/tracking/history/consignment/{consignmentNo}(consignmentNo=${courier.consignmentNo})}" class="btn btn-primary">View Tracking History</a>
+                <img th:src="@{/track/q/{no}/qr.png(no=${courier.consignmentNo})}" alt="QR code" width="120" height="120" class="mt-3 d-block"/>
             </div>
         </div>
     </div>

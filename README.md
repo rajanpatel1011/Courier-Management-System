@@ -123,7 +123,10 @@ src/
 - `GET /offices/{id}` - View office details
 
 ### Tracking
-- `GET /couriers/track?consignmentNo=XXX` - Track courier
+- `GET /couriers/track?consignmentNo=XXX` - Track courier by number
+- `GET /track/q/{consignmentNo}` - Live tracking page (QR scan destination)
+- `GET /track/q/{consignmentNo}/qr.png` - QR code image for labels
+- `GET /api/track/{consignmentNo}` - JSON status for real-time refresh
 - `POST /tracking/update` - Update courier status
 
 ## Database Schema

@@ -41,7 +41,10 @@ public class CourierService {
     // Get courier by consignment number
     @Transactional(readOnly = true)
     public Optional<Courier> getCourierByConsignmentNo(String consignmentNo) {
-        return courierRepository.findByConsignmentNo(consignmentNo);
+        if (consignmentNo == null || consignmentNo.isBlank()) {
+            return Optional.empty();
+        }
+        return courierRepository.findByConsignmentNoIgnoreCase(consignmentNo.trim());
     }
 
     // Get all couriers

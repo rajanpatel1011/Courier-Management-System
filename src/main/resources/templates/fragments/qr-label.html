@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- fragment: qr-label(consignmentNo) -->
+<div th:fragment="qr-label(consignmentNo)" class="text-center border rounded p-3 bg-light">
+    <p class="small text-muted mb-2">Scan to track in real time</p>
+    <img th:src="@{/track/q/{no}/qr.png(no=${consignmentNo})}" alt="Tracking QR code" width="200" height="200" class="mb-2"/>
+    <p class="mb-1"><strong th:text="${consignmentNo}"></strong></p>
+    <a th:href="@{/track/q/{no}(no=${consignmentNo})}" class="small">Open tracking page</a>
+</div>
+</body>
+</html>
