@@ -34,7 +34,7 @@ public class AuthController {
     @PostMapping("/login")
     public String processLogin(@RequestParam String username,
                              @RequestParam String password,
-                             @RequestParam String office,
+                             @RequestParam(required = false, defaultValue = "") String office,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
 
@@ -42,7 +42,14 @@ public class AuthController {
         if ("admin".equals(username) && "admin123".equals(password)) {
             session.setAttribute("user_name", "Admin");
             session.setAttribute("user_type", "admin-role");
+            session.setAttribute("user_office", "admin");
             return "redirect:/admin";
+        }
+
+        // Validate office is selected for officer login
+        if (office == null || office.trim().isEmpty() || "admin".equals(office)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select a valid office for officer login.");
+            return "redirect:/login";
         }
 
         // Check officer login

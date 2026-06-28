@@ -44,8 +44,9 @@
 
                 <div class="mb-3">
                     <label for="office" class="form-label">Office</label>
-                    <select class="form-control" id="office" name="office" required>
-                        <option value="">Select Office</option>
+                    <select class="form-control" id="office" name="office" onchange="updateOfficeRequirement()">
+                        <option value="admin">Admin Office</option>
+                        <option value="">-- Select Office --</option>
                         <option th:each="office : ${offices}" th:value="${office}" th:text="${office}"></option>
                     </select>
                 </div>
@@ -65,5 +66,34 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle office requirement based on username
+        document.getElementById('username').addEventListener('change', function() {
+            updateOfficeRequirement();
+        });
+
+        function updateOfficeRequirement() {
+            const username = document.getElementById('username').value;
+            const officeSelect = document.getElementById('office');
+            
+            if (username.toLowerCase() === 'admin') {
+                officeSelect.value = 'admin';
+            } else {
+                // For officer login, clear the admin option and require office selection
+                officeSelect.required = true;
+            }
+        }
+
+        // Prevent empty office selection for non-admin users
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const office = document.getElementById('office').value;
+            
+            if (username.toLowerCase() !== 'admin' && !office) {
+                e.preventDefault();
+                alert('Please select an office');
+            }
+        });
+    </script>
 </body>
 </html>
