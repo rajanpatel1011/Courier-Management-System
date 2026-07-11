@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head Fragment -->
+<head th:fragment="html-head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Courier Management System'">Courier Management System</title>
+    <!-- Bootstrap 5.3.2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Public Navbar Fragment -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-modern sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <i class="bi bi-box-seam-fill me-2 fs-4"></i>
+            <span>CourierX</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/track-status">Track Shipment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+                <li class="nav-item ms-lg-2">
+                    <a href="/login" class="btn btn-modern btn-modern-primary py-2 px-4 mt-2 mt-lg-0">
+                        <i class="bi bi-shield-lock me-1"></i> Staff Portal
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Admin/Officer Header Fragment -->
+<div th:fragment="admin-header(userName, userType)" class="d-flex justify-content-between align-items-center mb-4 py-3 border-bottom border-light">
+    <div>
+        <h1 class="h3 mb-0 text-gradient text-primary" th:text="${userType == 'admin-role' ? 'System Administration' : 'Officer Dashboard'}">Dashboard</h1>
+        <p class="text-muted small mb-0">Manage shipments, branches, and staff accounts</p>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <div class="text-end d-none d-sm-block">
+            <div class="fw-semibold text-light-theme-dark" th:text="${userName}">User</div>
+            <span class="badge badge-modern" th:classappend="${userType == 'admin-role' ? 'badge-modern-primary' : 'badge-modern-info'}" th:text="${userType == 'admin-role' ? 'System Admin' : 'Courier Officer'}">Role</span>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-light rounded-circle p-2 shadow-sm" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle fs-4 text-primary"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2" aria-labelledby="userMenuDropdown">
+                <li>
+                    <a class="dropdown-item py-2" href="/change-password">
+                        <i class="bi bi-key me-2 text-warning"></i> Change Password
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item py-2 text-danger" href="/logout">
+                        <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Sidebar Fragment -->
+<div th:fragment="sidebar(activePage)" class="col-md-3 col-lg-2 sidebar-modern p-0">
+    <div class="sticky-top pt-3 d-flex flex-column h-100" style="z-index: 1000; top: 0;">
+        <div class="px-4 mb-4 d-flex align-items-center">
+            <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
+            <span class="brand-font fs-4 fw-bold text-primary">CourierX</span>
+        </div>
+        
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'dashboard' ? 'active' : ''}" href="/admin">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+            </li>
+            
+            <li class="nav-item-header px-4 py-2 small text-uppercase text-muted fw-bold mt-2">Shipments</li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'couriers' ? 'active' : ''}" href="/couriers">
+                    <i class="bi bi-boxes me-2"></i> Manage Couriers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'add-courier' ? 'active' : ''}" href="/couriers/add">
+                    <i class="bi bi-plus-circle me-2"></i> Add Courier
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'search' ? 'active' : ''}" href="/search-edit">
+                    <i class="bi bi-search me-2"></i> Search &amp; Edit
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'reports' ? 'active' : ''}" href="/report">
+                    <i class="bi bi-bar-chart-line me-2"></i> Reports
+                </a>
+            </li>
+            
+            <li class="nav-item-header px-4 py-2 small text-uppercase text-muted fw-bold mt-2">Network</li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'offices' ? 'active' : ''}" href="/offices">
+                    <i class="bi bi-building me-2"></i> Manage Offices
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'add-office' ? 'active' : ''}" href="/offices/add">
+                    <i class="bi bi-plus-circle me-2"></i> Add Office
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'officers' ? 'active' : ''}" href="/officers">
+                    <i class="bi bi-people me-2"></i> Manage Officers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activePage == 'add-officer' ? 'active' : ''}" href="/officers/add">
+                    <i class="bi bi-person-plus me-2"></i> Add Officer
+                </a>
+            </li>
+        </ul>
+        
+        <div class="p-3 border-top border-light mt-auto">
+            <a href="/logout" class="btn btn-outline-danger w-100 rounded-3 py-2 btn-sm">
+                <i class="bi bi-box-arrow-right me-1"></i> Log Out
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Public Footer Fragment -->
+<footer th:fragment="footer" class="footer-modern mt-auto">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
+                    <span class="brand-font fs-4 fw-bold text-white">CourierX</span>
+                </div>
+                <p class="text-muted-dark small">Next-generation logistic tracking and package delivery solutions, built with speed, reliability, and security in mind.</p>
+            </div>
+            <div class="col-lg-2 col-md-3 col-6">
+                <h5 class="text-white mb-3 text-uppercase small fw-bold">Company</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a href="/about" class="text-decoration-none text-muted-dark hover-white small">About Us</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-muted-dark hover-white small">Careers</a></li>
+                    <li class="mb-2"><a href="/contact" class="text-decoration-none text-muted-dark hover-white small">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-3 col-6">
+                <h5 class="text-white mb-3 text-uppercase small fw-bold">Services</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a href="/track-status" class="text-decoration-none text-muted-dark hover-white small">Track Shipment</a></li>
+                    <li class="mb-2"><a href="/login" class="text-decoration-none text-muted-dark hover-white small">Staff Portal</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-muted-dark hover-white small">Express Delivery</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h5 class="text-white mb-3 text-uppercase small fw-bold">Contact Support</h5>
+                <p class="text-muted-dark small mb-1"><i class="bi bi-telephone me-2 text-primary"></i> 1-800-COURIER</p>
+                <p class="text-muted-dark small"><i class="bi bi-envelope me-2 text-primary"></i> support@courierx.com</p>
+            </div>
+        </div>
+        <hr class="my-4 border-secondary opacity-25">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+            <p class="text-muted-dark small mb-0">&copy; 2026 CourierX Inc. All rights reserved.</p>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-muted-dark fs-5"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-muted-dark fs-5"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="text-muted-dark fs-5"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="text-muted-dark fs-5"><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</footer>
+
+</body>
+</html>

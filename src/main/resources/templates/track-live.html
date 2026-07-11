@@ -1,83 +1,316 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Tracking</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f4f6fb; }
-        .status-badge { font-size: 1.1rem; }
-        .timeline-item { border-left: 3px solid #0d6efd; padding-left: 1rem; margin-bottom: 1rem; }
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    </style>
-</head>
-<body>
-<div class="container py-4" style="max-width: 480px;">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 mb-0">Package Tracking</h1>
-        <span class="badge bg-success pulse" id="liveIndicator">Live</span>
-    </div>
-    <div class="card shadow-sm mb-3">
-        <div class="card-body">
-            <p class="text-muted small mb-1">Consignment</p>
-            <h2 class="h5 text-primary" id="consignmentNo" th:text="${tracking.consignmentNo}">—</h2>
-            <p class="mb-2">Status: <span class="badge bg-primary status-badge" id="status" th:text="${tracking.status}">—</span></p>
-            <p class="mb-1"><strong>Current location:</strong> <span id="currentLocation" th:text="${tracking.currentLocation}">—</span></p>
-            <p class="mb-1"><strong>Est. delivery:</strong> <span id="estimatedDelivery" th:text="${tracking.estimatedDelivery}">—</span></p>
-            <p class="mb-0 text-muted small">Last updated: <span id="lastUpdated" th:text="${tracking.lastUpdated}">—</span></p>
+<head th:replace="~{layout/layout :: html-head('Live Tracking')}"></head>
+<body class="bg-light d-flex flex-column" style="min-height: 100vh;">
+
+    <!-- Navbar -->
+    <nav th:replace="~{layout/layout :: navbar}"></nav>
+
+    <!-- Main Live Tracking Section -->
+    <div class="container py-5 my-auto" style="max-width: 650px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h4 mb-0 fw-bold text-dark">Live Package Tracking</h1>
+                <p class="text-muted small mb-0">Real-time logistics information status</p>
+            </div>
+            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 px-3 py-2 rounded-pill d-flex align-items-center gap-1" id="liveIndicator">
+                <span class="spinner-grow spinner-grow-sm text-success" role="status" style="width: 8px; height: 8px;"></span> Live
+            </span>
         </div>
-    </div>
-    <div class="card shadow-sm mb-3">
-        <div class="card-body">
-            <p class="mb-1"><strong>From:</strong> <span id="shipperName" th:text="${tracking.shipperName}"></span></p>
-            <p class="mb-0"><strong>To:</strong> <span id="receiverName" th:text="${tracking.receiverName}"></span></p>
-            <p class="mb-0 mt-2 text-muted small">Mode: <span id="mode" th:text="${tracking.mode}"></span>
-                · Pickup: <span id="pickUp" th:text="|${tracking.pickUpDate} ${tracking.pickUpTime}|"></span></p>
+
+        <!-- Package Overview Card -->
+        <div class="glass-card p-4 border border-white border-opacity-60 bg-white shadow mb-4">
+            <div class="row gy-3">
+                <div class="col-md-7">
+                    <p class="text-secondary small text-uppercase fw-semibold mb-1">Consignment Number</p>
+                    <h2 class="h4 text-primary fw-bold mb-3" id="consignmentNo" th:text="${tracking.consignmentNo}">—</h2>
+                    
+                    <div class="mb-2">
+                        <span class="text-muted-light small"><i class="bi bi-geo-alt me-1 text-primary"></i> Current Location:</span>
+                        <strong id="currentLocation" th:text="${tracking.currentLocation}">—</strong>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-muted-light small"><i class="bi bi-calendar-event me-1 text-primary"></i> Est. Delivery:</span>
+                        <strong id="estimatedDelivery" th:text="${tracking.estimatedDelivery}">—</strong>
+                    </div>
+                </div>
+                <div class="col-md-5 border-start border-light ps-md-4">
+                    <div class="mb-2">
+                        <span class="text-muted-light small d-block">From</span>
+                        <strong id="shipperName" th:text="${tracking.shipperName}">—</strong>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-muted-light small d-block">To</span>
+                        <strong id="receiverName" th:text="${tracking.receiverName}">—</strong>
+                    </div>
+                    <div class="small text-muted-light">
+                        <i class="bi bi-truck me-1"></i> Mode: <span id="mode" th:text="${tracking.mode}">—</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Last Updated Label -->
+            <div class="mt-4 pt-3 border-top border-light d-flex justify-content-between align-items-center text-muted-light small">
+                <span>Booked: <span th:text="${tracking.bookingDate}">—</span></span>
+                <span>Last Updated: <span id="lastUpdated" th:text="${#temporals.format(tracking.lastUpdated, 'yyyy-MM-dd HH:mm:ss')}">—</span></span>
+            </div>
         </div>
-    </div>
-    <h2 class="h6">Tracking updates</h2>
-    <div id="timeline" class="mb-3">
-        <div th:each="event : ${tracking.events}" class="timeline-item">
-            <div class="fw-semibold" th:text="${event.status}"></div>
-            <div class="small text-muted" th:text="|${event.time} · ${event.location}|"></div>
-            <div th:if="${event.comments}" class="small" th:text="${event.comments}"></div>
+
+        <!-- High-level Progress Stepper -->
+        <div class="glass-card p-4 border border-white border-opacity-60 bg-white shadow mb-4">
+            <h5 class="fw-bold mb-3 text-dark">Shipment Progress</h5>
+            
+            <div class="row text-center position-relative g-0 py-2" id="progressStepper">
+                <!-- Stepper Connector Line -->
+                <div class="position-absolute start-0 end-0 bg-secondary bg-opacity-20 rounded" style="height: 4px; top: 38px; transform: translateY(-50%); z-index: 1;"></div>
+                <div class="position-absolute start-0 bg-primary rounded" id="progressLine" style="height: 4px; top: 38px; transform: translateY(-50%); z-index: 1; width: 0%; transition: width 0.5s ease;"></div>
+                
+                <!-- Step 1: Booked -->
+                <div class="col-3 position-relative" style="z-index: 2;" id="step-booked">
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; transition: all 0.3s ease;"><i class="bi bi-file-earmark-plus fs-5"></i></div>
+                    </div>
+                    <span class="small fw-semibold text-secondary d-block">Booked</span>
+                </div>
+                
+                <!-- Step 2: Dispatched -->
+                <div class="col-3 position-relative" style="z-index: 2;" id="step-dispatched">
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; transition: all 0.3s ease;"><i class="bi bi-box-arrow-right fs-5"></i></div>
+                    </div>
+                    <span class="small fw-semibold text-secondary d-block">Dispatched</span>
+                </div>
+                
+                <!-- Step 3: In Transit -->
+                <div class="col-3 position-relative" style="z-index: 2;" id="step-transit">
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; transition: all 0.3s ease;"><i class="bi bi-truck fs-5"></i></div>
+                    </div>
+                    <span class="small fw-semibold text-secondary d-block">In Transit</span>
+                </div>
+                
+                <!-- Step 4: Delivered -->
+                <div class="col-3 position-relative" style="z-index: 2;" id="step-delivered">
+                    <div class="d-flex justify-content-center mb-2">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; transition: all 0.3s ease;"><i class="bi bi-check2-circle fs-5"></i></div>
+                    </div>
+                    <span class="small fw-semibold text-secondary d-block">Delivered</span>
+                </div>
+            </div>
         </div>
-        <p th:if="${tracking.events.empty}" class="text-muted small">No scan events yet.</p>
+
+        <!-- Detailed Status Logs -->
+        <div class="glass-card p-4 border border-white border-opacity-60 bg-white shadow mb-4">
+            <h5 class="fw-bold mb-3 text-dark">Activity Log</h5>
+            
+            <div id="timeline" class="stepper-timeline">
+                <div th:each="event, iter : ${tracking.events}" class="stepper-step" th:classappend="${iter.index == 0 ? 'active' : 'completed'}">
+                    <div class="pulse-ring" th:if="${iter.index == 0}"></div>
+                    <div class="stepper-node">
+                        <i class="bi" th:classappend="${iter.index == 0 ? 'bi-dot fs-3' : 'bi-check'}"></i>
+                    </div>
+                    <div class="stepper-content">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-dark" th:text="${event.status}">Status</span>
+                            <span class="text-muted small" th:text="${#temporals.format(event.time, 'MMM dd, yyyy · HH:mm')}">Date</span>
+                        </div>
+                        <div class="text-secondary small mb-1"><i class="bi bi-geo-alt me-1"></i> <span th:text="${event.location}">Location</span></div>
+                        <p class="mb-0 text-muted-light small" th:if="${event.comments}" th:text="${event.comments}">Comments</p>
+                    </div>
+                </div>
+                <div th:if="${tracking.events.empty}" class="text-center py-4 text-muted-light">
+                    <i class="bi bi-journal-x fs-1 mb-2 d-block"></i>
+                    <p class="mb-0 small">No scan events logged for this package yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back & Refresh Options -->
+        <p class="text-center text-muted-light small">
+            Auto-refreshing in <span id="timerVal" th:text="${refreshSeconds}">15</span>s ·
+            <a th:href="@{/track-status}" class="text-decoration-none fw-semibold">Track another package</a>
+        </p>
     </div>
-    <p class="text-center text-muted small">Auto-refreshes every <span th:text="${refreshSeconds}">15</span>s ·
-        <a th:href="@{/track-status}">Track by number</a></p>
-</div>
-<script th:inline="javascript">
-    const consignmentNo = /*[[${tracking.consignmentNo}]]*/ '';
-    const refreshSeconds = /*[[${refreshSeconds}]]*/ 15;
-    function renderTimeline(events) {
-        const el = document.getElementById('timeline');
-        if (!events || events.length === 0) {
-            el.innerHTML = '<p class="text-muted small">No scan events yet.</p>';
-            return;
+
+    <!-- Footer -->
+    <footer th:replace="~{layout/layout :: footer}"></footer>
+
+    <script th:inline="javascript">
+        const consignmentNo = /*[[${tracking.consignmentNo}]]*/ '';
+        const refreshSeconds = /*[[${refreshSeconds}]]*/ 15;
+        let countdown = refreshSeconds;
+        
+        // Timer countdown update
+        setInterval(function() {
+            countdown--;
+            if (countdown <= 0) {
+                countdown = refreshSeconds;
+            }
+            const el = document.getElementById('timerVal');
+            if (el) el.textContent = countdown;
+        }, 1000);
+
+        // Date formatter for JS
+        function formatDate(isoString) {
+            if (!isoString) return '—';
+            try {
+                const date = new Date(isoString);
+                const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                const pad = (n) => n < 10 ? '0' + n : n;
+                
+                const month = months[date.getMonth()];
+                const day = pad(date.getDate());
+                const year = date.getFullYear();
+                const hours = pad(date.getHours());
+                const mins = pad(date.getMinutes());
+                
+                return `${month} ${day}, ${year} · ${hours}:${mins}`;
+            } catch (e) {
+                return isoString;
+            }
         }
-        el.innerHTML = events.map(function(e) {
-            var html = '<div class="timeline-item"><div class="fw-semibold">' + (e.status || '') + '</div>';
-            html += '<div class="small text-muted">' + (e.time || '') + ' · ' + (e.location || '') + '</div>';
-            if (e.comments) { html += '<div class="small">' + e.comments + '</div>'; }
-            return html + '</div>';
-        }).join('');
-    }
-    async function refresh() {
-        try {
-            const res = await fetch('/api/track/' + encodeURIComponent(consignmentNo));
-            if (!res.ok) return;
-            const data = await res.json();
-            document.getElementById('status').textContent = data.status;
-            document.getElementById('currentLocation').textContent = data.currentLocation;
-            document.getElementById('estimatedDelivery').textContent = data.estimatedDelivery;
-            document.getElementById('lastUpdated').textContent = data.lastUpdated;
-            renderTimeline(data.events);
-        } catch (err) {}
-    }
-    setInterval(refresh, refreshSeconds * 1000);
-</script>
+
+        // Stepper updates based on status value
+        function updateProgressStepper(status) {
+            const steps = {
+                booked: document.getElementById('step-booked').querySelector('.rounded-circle'),
+                dispatched: document.getElementById('step-dispatched').querySelector('.rounded-circle'),
+                transit: document.getElementById('step-transit').querySelector('.rounded-circle'),
+                delivered: document.getElementById('step-delivered').querySelector('.rounded-circle')
+            };
+            
+            const stepLabels = {
+                booked: document.getElementById('step-booked').querySelector('span'),
+                dispatched: document.getElementById('step-dispatched').querySelector('span'),
+                transit: document.getElementById('step-transit').querySelector('span'),
+                delivered: document.getElementById('step-delivered').querySelector('span')
+            };
+
+            const line = document.getElementById('progressLine');
+            
+            // Reset classes
+            for (let k in steps) {
+                steps[k].className = 'rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm';
+                stepLabels[k].className = 'small fw-semibold text-secondary d-block';
+            }
+
+            const cleanStatus = (status || '').toLowerCase().trim();
+
+            if (cleanStatus === 'completed' || cleanStatus === 'delivered') {
+                // All completed
+                line.style.width = '100%';
+                steps.booked.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.dispatched.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.transit.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.delivered.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                
+                stepLabels.booked.className = 'small fw-bold text-success d-block';
+                stepLabels.dispatched.className = 'small fw-bold text-success d-block';
+                stepLabels.transit.className = 'small fw-bold text-success d-block';
+                stepLabels.delivered.className = 'small fw-bold text-success d-block';
+            } 
+            else if (cleanStatus === 'in transit' || cleanStatus === 'delayed' || cleanStatus === 'shipped') {
+                // Up to transit active
+                line.style.width = '66.6%';
+                steps.booked.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.dispatched.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.transit.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm';
+                
+                stepLabels.booked.className = 'small fw-bold text-success d-block';
+                stepLabels.dispatched.className = 'small fw-bold text-success d-block';
+                stepLabels.transit.className = 'small fw-bold text-primary d-block';
+            }
+            else if (cleanStatus === 'dispatched' || cleanStatus === 'accepted') {
+                // Up to dispatched active
+                line.style.width = '33.3%';
+                steps.booked.className = 'rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm';
+                steps.dispatched.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm';
+                
+                stepLabels.booked.className = 'small fw-bold text-success d-block';
+                stepLabels.dispatched.className = 'small fw-bold text-primary d-block';
+            }
+            else {
+                // Booked active
+                line.style.width = '0%';
+                steps.booked.className = 'rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm';
+                stepLabels.booked.className = 'small fw-bold text-primary d-block';
+            }
+        }
+
+        // Render detailed vertical logs
+        function renderTimeline(events) {
+            const el = document.getElementById('timeline');
+            if (!events || events.length === 0) {
+                el.innerHTML = `
+                    <div class="text-center py-4 text-muted-light">
+                        <i class="bi bi-journal-x fs-1 mb-2 d-block"></i>
+                        <p class="mb-0 small">No scan events logged for this package yet.</p>
+                    </div>`;
+                return;
+            }
+            
+            el.innerHTML = events.map(function(e, idx) {
+                const isActive = idx === 0;
+                let html = `<div class="stepper-step ${isActive ? 'active' : 'completed'}">`;
+                if (isActive) {
+                    html += '<div class="pulse-ring"></div>';
+                }
+                
+                html += '<div class="stepper-node">';
+                html += isActive ? '<i class="bi bi-dot fs-3"></i>' : '<i class="bi bi-check"></i>';
+                html += '</div>';
+                
+                html += '<div class="stepper-content">';
+                html += '  <div class="d-flex justify-content-between align-items-center mb-1">';
+                html += `    <span class="fw-bold text-dark">${e.status || ''}</span>`;
+                html += `    <span class="text-muted small">${formatDate(e.time)}</span>`;
+                html += '  </div>';
+                html += `  <div class="text-secondary small mb-1"><i class="bi bi-geo-alt me-1"></i> ${e.location || ''}</div>`;
+                if (e.comments) {
+                    html += `  <p class="mb-0 text-muted-light small">${e.comments}</p>`;
+                }
+                html += '</div></div>';
+                return html;
+            }).join('');
+        }
+
+        // Refresh Data API
+        async function refresh() {
+            try {
+                const res = await fetch('/api/track/' + encodeURIComponent(consignmentNo));
+                if (!res.ok) return;
+                const data = await res.json();
+                
+                // Update text fields
+                document.getElementById('currentLocation').textContent = data.currentLocation || '—';
+                document.getElementById('estimatedDelivery').textContent = data.estimatedDelivery || '—';
+                
+                const timeString = data.lastUpdated ? data.lastUpdated.replace('T', ' ').substring(0, 19) : '—';
+                document.getElementById('lastUpdated').textContent = timeString;
+                
+                document.getElementById('shipperName').textContent = data.shipperName || '—';
+                document.getElementById('receiverName').textContent = data.receiverName || '—';
+                document.getElementById('mode').textContent = data.mode || '—';
+                
+                // Update Timeline and Progress Stepper
+                updateProgressStepper(data.status);
+                renderTimeline(data.events);
+                
+                // Reset timer countdown
+                countdown = refreshSeconds;
+            } catch (err) {
+                console.error("Failed to fetch live status details: ", err);
+            }
+        }
+
+        // Initial running
+        document.addEventListener("DOMContentLoaded", function() {
+            const initialStatus = /*[[${tracking.status}]]*/ 'Booked';
+            updateProgressStepper(initialStatus);
+        });
+
+        // Set interval polling
+        setInterval(refresh, refreshSeconds * 1000);
+    </script>
 </body>
 </html>
