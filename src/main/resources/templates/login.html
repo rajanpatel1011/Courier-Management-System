@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: html-head('Portal Login')}"></head>
-<body class="dark-mesh-bg d-flex align-items-center justify-content-center py-5" style="min-height: 100vh; background-color: #0f172a;">
+
+<body class="dark-mesh-bg d-flex align-items-center justify-content-center py-5"
+    style="min-height: 100vh; background-color: #0f172a;">
 
     <div class="container" style="max-width: 460px;">
         <!-- Logo Branding -->
@@ -16,11 +19,14 @@
         </div>
 
         <!-- Glass Login Card -->
-        <div class="glass-card p-4 p-md-5 border border-white border-opacity-10 shadow-lg text-white" style="background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(24px);">
+        <div class="glass-card p-4 p-md-5 border border-white border-opacity-10 shadow-lg text-white"
+            style="background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(24px);">
             <h3 class="h4 fw-bold text-white text-center mb-4">Staff Sign In</h3>
 
             <!-- Error Message Alert -->
-            <div th:if="${errorMessage}" class="alert alert-danger bg-danger bg-opacity-15 text-danger border border-danger border-opacity-20 rounded-3 d-flex align-items-center gap-2 mb-4" role="alert">
+            <div th:if="${errorMessage}"
+                class="alert alert-danger bg-danger bg-opacity-15 text-danger border border-danger border-opacity-20 rounded-3 d-flex align-items-center gap-2 mb-4"
+                role="alert">
                 <i class="bi bi-exclamation-triangle-fill fs-5"></i>
                 <span class="small" th:text="${errorMessage}">Invalid credentials.</span>
             </div>
@@ -28,30 +34,47 @@
             <form th:action="@{/login}" method="post">
                 <!-- Username -->
                 <div class="mb-3">
-                    <label for="username" class="form-label text-muted-dark small fw-semibold text-uppercase">Username</label>
+                    <label for="username"
+                        class="form-label text-muted-dark small fw-semibold text-uppercase">Username</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent" id="username" name="username" placeholder="e.g. admin" required>
+                        <span
+                            class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i
+                                class="bi bi-person"></i></span>
+                        <input type="text"
+                            class="form-control form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent"
+                            id="username" name="username" placeholder="e.g. admin" required>
                     </div>
                 </div>
 
                 <!-- Password -->
                 <div class="mb-3">
-                    <label for="password" class="form-label text-muted-dark small fw-semibold text-uppercase">Password</label>
+                    <label for="password"
+                        class="form-label text-muted-dark small fw-semibold text-uppercase">Password</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent" id="password" name="password" placeholder="••••••••" required>
+                        <span
+                            class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i
+                                class="bi bi-lock"></i></span>
+                        <input type="password"
+                            class="form-control form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent"
+                            id="password" name="password" placeholder="••••••••" required>
                     </div>
                 </div>
 
                 <!-- Office Selection -->
                 <div class="mb-4">
-                    <label for="office" class="form-label text-muted-dark small fw-semibold text-uppercase">Assigned Office</label>
+                    <label for="office" class="form-label text-muted-dark small fw-semibold text-uppercase">Assigned
+                        Office</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i class="bi bi-building"></i></span>
-                        <select class="form-select form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent" id="office" name="office" required style="appearance: none; background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 16px 12px;">
+                        <span
+                            class="input-group-text bg-transparent border-end-0 border-white border-opacity-10 rounded-start-3 text-muted-dark"><i
+                                class="bi bi-building"></i></span>
+                        <select
+                            class="form-select form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent"
+                            id="office" name="office" required
+                            style="appearance: none; background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 16px 12px;">
                             <option value="" class="bg-dark text-muted-dark">Select Office</option>
-                            <option th:each="office : ${offices}" th:value="${office}" th:text="${office}" class="bg-dark text-white"></option>
+                            <option th:each="office : ${offices}" th:value="${office}" th:text="${office}"
+                                class="bg-dark text-white"></option>
                         </select>
                     </div>
                 </div>
@@ -70,10 +93,11 @@
                 <code class="text-secondary small mt-1 d-inline-block">username: admin  |  password: admin123</code>
             </div>
         </div>
-        
+
         <!-- Back Link -->
         <div class="text-center mt-4">
-            <a href="/" class="text-decoration-none text-muted-dark hover-white small d-inline-flex align-items-center gap-1">
+            <a href="/"
+                class="text-decoration-none text-muted-dark hover-white small d-inline-flex align-items-center gap-1">
                 <i class="bi bi-arrow-left"></i> Return to Homepage
             </a>
         </div>
@@ -82,4 +106,5 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
