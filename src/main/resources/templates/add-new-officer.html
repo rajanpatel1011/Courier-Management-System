@@ -39,6 +39,9 @@
                 <option value="">Select Office</option>
                 <option th:each="office : ${offices}" th:value="${office.officeName}" th:text="${office.officeName}"></option>
             </select>
+            <div th:if="${#lists.isEmpty(offices)}" class="form-text text-danger">
+                No offices are available. Add an office before assigning staff.
+            </div>
         </div>
         <button type="submit" class="btn btn-success">Add Officer</button>
     </form>

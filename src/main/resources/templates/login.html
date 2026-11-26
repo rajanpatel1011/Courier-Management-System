@@ -70,12 +70,15 @@
                                 class="bi bi-building"></i></span>
                         <select
                             class="form-select form-control-modern border-start-0 border-white border-opacity-10 rounded-end-3 py-2 text-white bg-transparent"
-                            id="office" name="office" required
+                            id="office" name="office" required th:disabled="${#lists.isEmpty(offices)}"
                             style="appearance: none; background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 16px 12px;">
                             <option value="" class="bg-dark text-muted-dark">Select Office</option>
                             <option th:each="office : ${offices}" th:value="${office}" th:text="${office}"
                                 class="bg-dark text-white"></option>
                         </select>
+                    </div>
+                    <div th:if="${#lists.isEmpty(offices)}" class="text-danger small mt-2">
+                        No offices are available. Ask an administrator to add an office.
                     </div>
                 </div>
 
