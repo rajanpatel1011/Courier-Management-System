@@ -4,7 +4,7 @@ Courier Management System gives all information regarding the every Courier in t
 
 ## Technology Stack
 
-- **Backend**: Java 21, Spring Boot 3.x
+- **Backend**: Java 21, Spring Boot 4.x
 - **Database**: MySQL 8.x with JPA/Hibernate
 - **Frontend**: Thymeleaf templates with Bootstrap 5
 - **Build Tool**: Maven
